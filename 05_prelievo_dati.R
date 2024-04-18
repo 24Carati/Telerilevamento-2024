@@ -1,6 +1,9 @@
 # come importare un dato esterno in R
 library(terra)
 library(imageRy)
+# visto che lavoriamo con un file ".nc" usiamo la libreria seguente:
+# install.packages("RNetCDF")
+library(RNetCDF)
 
 # in questo caso richiamiamo l'immagine con il suo percorso
 setwd("C:/Users/franc/Desktop/Università/Esami/M. Telerilevamento")
@@ -40,3 +43,13 @@ plotRGB(vulcano, 2, 3, 1)
 im.plotRGB(vulcano, 1, 3, 2)
 im.plotRGB(vulcano, 3, 1, 2)
 im.plotRGB(vulcano, 2, 3, 1)
+
+# prendo un dato da copernicus, importiamo il dato, e vediamo l'immagine
+soil <- rast("c_gls_SSM1km_202404160000_CEURO_S1CSAR_V1.2.1.nc")
+plot(soil)
+plot(soil[[1]])
+
+# cropping data e cioe taglio una zona precisa di interesse
+ext <- c(25, 35, 58, 62)
+soilcrop <- crop(soil, ext)
+plot(soilcrop)
