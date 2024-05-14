@@ -1,0 +1,95 @@
+\documentclass{beamer} % Per le presentazioni a slide
+\usepackage{graphicx} % Required for inserting images
+
+
+\usetheme{Frankfurt} % Serve per fare vedere le sezioni delle slide 
+\usecolortheme{crane} % Per cambiare colore delle slide
+
+\title{My first presentation}
+\author{Francesco Carati}
+\date{May 2024}
+
+\begin{document}
+
+\maketitle
+
+\AtBeginSection[] % Do nothing for \section*
+{
+\begin{frame}{Outline}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\section{Introduction}
+
+\begin{frame}{My first slide}
+    My first slide
+\end{frame}
+
+\begin{frame}{Courier}
+    Con il linguaggio R usiamo il pacchetto "\texttt{imageRy}" % Usa un carattere differente
+\end{frame}
+
+\begin{frame}{Itemization}
+    \begin{itemize}
+    \scriptsize{
+        \item Esempio di lista
+        \pause \item Esempio 2
+        \pause \item Esempio 3 } % Pause fa in modo che ci sia l'animazione                              di entrata ma le conta come slide diverse,                            ma "Frankfurt" la conta come una sola
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Itemization}
+\scriptsize{Esempio di frase scritta su una slide con una dimensione diversa} \\
+\huge{Esempio di frase scritta su una slide con una dimensione diversa}
+\\
+    \begin{itemize}
+    \scriptsize{
+        \item Esempio di lista
+        \item Esempio 2
+        \item Esempio 3 }
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Tipi di testo}
+    \large{in questo esempio avremo parole in \textbf{grassetto} ed una in \textit{corsivo}}
+\end{frame}
+
+\section{Formule}
+
+\begin{frame}{Formule}
+Questa è la formula della \textbf{deviazione standard}:
+    % \bigskip
+    \smallskip
+    \begin{equation}
+        \delta = \sqrt{\frac{\sum_{i=1}^N (x_{i} - \mu)^2}{N}}  
+    \end{equation}
+        \\
+in alternativa la somma si può scrivere così:
+    \begin{equation}
+        \displaystyle\sum_{i=1}^N (x_{i} - \mu)^2
+    \end{equation}
+\end{frame}
+
+\section{Immagini}
+
+\begin{frame}{Immagine}
+    \begin{figure}
+        \centering
+        \includegraphics[width=.9\linewidth]{Dev_st.png}
+        \end{figure} 
+\end{frame}
+
+\begin{frame}{Quattro Immagini}
+    \begin{figure}
+        \centering
+        \includegraphics[width=.4\linewidth]{Dev_st.png}
+        \includegraphics[width=.4\linewidth]{Dev_st.png} \\
+        \includegraphics[width=.4\linewidth]{Dev_st.png}
+        \includegraphics[width=.4\linewidth]{Dev_st.png}
+        \end{figure} 
+\end{frame}
+
+
+
+\end{document}
