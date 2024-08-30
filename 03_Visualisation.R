@@ -1,4 +1,4 @@
-# Satellite data visualisation in R usando imageRy
+# visualizzazione di dati satellitari in R usando imageRy
 # RS data
 # Pacchetti installati su R
 library(imageRy)
@@ -6,7 +6,7 @@ library(terra)
 
 # lista dei dati disponibili: qualsiasi funzione del pacchetto di imageRy inizia con im.
 im.list() # in R vanno sempre usate le parentesi tonde
-# Importing data
+# importazione di dati
 # Funzione per importare/utilizzare uno dei dati all'interno della lista: im.import("nomedato")
 mato <- im.import("matogrosso_ast_2006209_lrg.jpg") # mato: oggetto
 b2 <- im.import("sentinel.dolomites.b2.tif") # Immagine composta da tante bande (tanti sensori per ogni lunghezza d'onda)
@@ -68,7 +68,7 @@ plot(stacksent[[4]], col=clg)
 dev.off()
 
 
-# Exercise: plot in a multiframe the bands with different color ramps
+# Esercizio: plotta in un "multiframe" le bande con "ramp" di colori diversi
 par(mfrow=c(2,2))
 
 clb <- colorRampPalette(c("dark blue", "blue", "light blue")) (100)
@@ -94,5 +94,5 @@ im.plotRGB(stacksent, r=4, g=3, b=2)
 im.plotRGB(stacksent, r=3, g=4, b=2)
 im.plotRGB(stacksent, r=3, g=2, b=4)
 
-
+# questa funzione mi genera una tabella con vari dati di confronto tra le varie bande
 pairs(stacksent)
