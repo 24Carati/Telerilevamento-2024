@@ -1,11 +1,10 @@
-# First R script
-
-# R as a calculator
+# primo script su R
+# R può funzionare da calcolatrice
 a <- 6*7
 b <- 5*8
 a+b
 
-# Arrays: serie di dati concatenati tramite c()
+# Arrays: serie di dati concatenati tramite c(), praticamente è un vettore
 flowers <- c(3, 6, 8, 10, 15, 18)  
 # vettore che mi dice quanti fiori ho nel plot
 flowers
