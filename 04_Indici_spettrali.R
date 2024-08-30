@@ -1,4 +1,4 @@
-# spectral index
+# Indici spettrali
 
 library(imageRy)
 library(terra)
@@ -9,8 +9,8 @@ im.list()
 # importare una immagine
 m1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")
 
-# Bands
-# Band 1 = NIR 
+# Bande
+# Band 1 = NIR
 # Band 2 = red
 # Band 3 = green
 
@@ -54,11 +54,11 @@ im.plotRGB(m2006, 3, 2, 1) # NIR on blue
 
 #-------
 
-# calcoliamo la DVI (Difference Vegetation Index) - se è un pixel vegetato 
+# calcoliamo la DVI (Difference Vegetation Index) - se è un pixel vegetato
 # avremo un valore alto (da -255 a 255) dipende dalla risoluzione radiometrica
 dvi1992 = m1992[[1]] - m1992[[2]] # procedimento 1
 # questa sotto è equivalente al procedimento 1
-m1992$matogrosso_l5_1992219_lrg_1 - m1992$matogrosso_l5_1992219_lrg_2 
+m1992$matogrosso_l5_1992219_lrg_1 - m1992$matogrosso_l5_1992219_lrg_2
 # il dollaro collega il nome al oggetto appartenente al vettore
 dvi1992 # così mi da i valori
 
