@@ -1,0 +1,94 @@
+dev.off() # con questo comando puliamo da tutti i lavori precedenti
+
+#install.packages("raster")
+#install.packages("sf")
+library(terra)
+library(imageRy)
+library(ggplot2)
+library(raster)
+library(sf)
+library(patchwork)
+library(viridis)
+
+
+#vedo la lista di tutte le immagini
+#im.list() 
+
+
+#Ho preso le immagini satellitari alle bande b2, b3, b4, b8 del pre e del post alluvione da Sentinel-2
+b2p <- im.import("Emilia-Romagna_Sentinel2_b2_pre.tiff")
+b3p <- im.import("Emilia-Romagna_Sentinel2_b3_pre.tiff")
+b4p <- im.import("Emilia-Romagna_Sentinel2_b4_pre.tiff")
+b8p <- im.import("Emilia-Romagna_Sentinel2_b8_pre.tiff")
+ERpre <- c(b2p, b3p, b4p, b8p)
+
+b2d <- im.import("Emilia-Romagna_Sentinel2_b2_post.tiff")
+b3d <- im.import("Emilia-Romagna_Sentinel2_b3_post.tiff")
+b4d <- im.import("Emilia-Romagna_Sentinel2_b4_post.tiff")
+b8d <- im.import("Emilia-Romagna_Sentinel2_b8_post.tiff")
+ERpost <- c(b2d, b3d, b4d, b8d)
+
+#crop images
+# cropping data e cioe taglio una zona precisa di interesse
+ext <- c(11.6, 12.6, 44.2, 45) # questa variabile mi da i limiti dell'immagine da tagliare (si definiscono guardando l'immagine)
+b2pcrop <- crop(b2p,ext)
+b3pcrop <- crop(b3p,ext)
+b4pcrop <- crop(b4p,ext)
+b8pcrop <- crop(b8p,ext)
+ERprecrop <- c(b2pcrop, b3pcrop, b4pcrop, b8pcrop)
+
+b2dcrop <- crop(b2d,ext)
+b3dcrop <- crop(b3d,ext)
+b4dcrop <- crop(b4d,ext)
+b8dcrop <- crop(b8d,ext)
+ERpostcrop <- c(b2dcrop, b3dcrop, b4dcrop, b8dcrop)
+
+
+par(mfrow=c(2,2))
+im.plotRGB(ERprecrop, r=3, g=2, b=1)
+im.plotRGB(ERpostcrop, r=3, g=2, b=1)
+im.plotRGB(ERprecrop, r=4, g=2, b=1)
+im.plotRGB(ERpostcrop, r=4, g=2, b=1)
+
+
+tagl <- c(11.78, 11.91, 44.49, 44.61) #taglio la zona selezionata per osservare l'allagamento
+cropP <- crop(ERprecrop, tagl)
+cropD <- crop(ERpostcrop, tagl)
+
+par(mfrow=c(2,2))
+im.plotRGB(cropP, r=3, g=2, b=1)
+im.plotRGB(cropD, r=3, g=2, b=1)
+im.plotRGB(cropP, r=4, g=2, b=1)
+im.plotRGB(cropD, r=4, g=2, b=1)
+
+#calcoliano NDVI
+NdviERpre = (cropP[[4]] - cropP[[3]]) / (cropP[[4]] + cropP[[3]])
+NdviERpre
+
+NdviERpost = (cropD[[4]] - cropD[[3]]) / (cropD[[4]] + cropD[[3]])
+NdviERpost
+
+NdviERpostcrop <- crop(NdviERpost, ext)
+NdviERprecrop <- crop(NdviERpre, ext)
+par(mfrow=c(1,2))
+plot(NdviERprecrop, col=cl)
+plot(NdviERpostcrop, col=cl)
+
+#calcoliamo NDWI
+NdwiERpre = (cropP[[2]] - cropP[[4]]) / (cropP[[2]] + cropP[[4]])
+NdwiERpre
+
+NdwiERpost = (cropD[[2]] - cropD[[4]]) / (cropD[[2]] + cropD[[4]])
+NdwiERpost
+
+NdwiERpostcrop <- crop(NdwiERpost, ext)
+NdwiERprecrop <- crop(NdwiERpre, ext)
+par(mfrow=c(1,2))
+plot(NdwiERprecrop, col=cl)
+plot(NdwiERpostcrop, col=cl)
+
+par(mfrow=c(1,1))
+im.plotRGB(cropD, r=3, g=2, b=1)
+im.plotRGB(cropD, r=4, g=2, b=1)
+plot(NdviERpostcrop, col=cl)
+plot(NdwiERpostcrop, col=cl)
