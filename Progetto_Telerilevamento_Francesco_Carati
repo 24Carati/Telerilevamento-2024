@@ -1,14 +1,8 @@
-dev.off() # con questo comando puliamo da tutti i lavori precedenti
+# dev.off() # con questo comando puliamo da tutti i lavori precedenti
 
-#install.packages("raster")
-#install.packages("sf")
 library(terra)
 library(imageRy)
-library(ggplot2)
-library(raster)
-library(sf)
-library(patchwork)
-library(viridis)
+library(viridis) #questa libreria mi permette di usare "rampe di colori" chiaramente riconoscibili anche ai daltonici
 
 
 #vedo la lista di tutte le immagini
@@ -16,34 +10,34 @@ library(viridis)
 
 
 #Ho preso le immagini satellitari alle bande b2, b3, b4, b8 del pre e del post alluvione da Sentinel-2
-b2p <- im.import("Emilia-Romagna_Sentinel2_b2_pre.tiff")
-b3p <- im.import("Emilia-Romagna_Sentinel2_b3_pre.tiff")
-b4p <- im.import("Emilia-Romagna_Sentinel2_b4_pre.tiff")
-b8p <- im.import("Emilia-Romagna_Sentinel2_b8_pre.tiff")
-ERpre <- c(b2p, b3p, b4p, b8p)
+b2p <- im.import("Emilia-Romagna_Sentinel2_b2_pre.tiff") # b2 pre
+b3p <- im.import("Emilia-Romagna_Sentinel2_b3_pre.tiff") # b3 pre
+b4p <- im.import("Emilia-Romagna_Sentinel2_b4_pre.tiff") # b4 pre
+b8p <- im.import("Emilia-Romagna_Sentinel2_b8_pre.tiff") # b8 pre
+ERpre <- c(b2p, b3p, b4p, b8p) # vettore con tutte le bande pre evento
 
-b2d <- im.import("Emilia-Romagna_Sentinel2_b2_post.tiff")
-b3d <- im.import("Emilia-Romagna_Sentinel2_b3_post.tiff")
-b4d <- im.import("Emilia-Romagna_Sentinel2_b4_post.tiff")
-b8d <- im.import("Emilia-Romagna_Sentinel2_b8_post.tiff")
-ERpost <- c(b2d, b3d, b4d, b8d)
+b2d <- im.import("Emilia-Romagna_Sentinel2_b2_post.tiff") # b2 post
+b3d <- im.import("Emilia-Romagna_Sentinel2_b3_post.tiff") # b3 post
+b4d <- im.import("Emilia-Romagna_Sentinel2_b4_post.tiff") # b4 post
+b8d <- im.import("Emilia-Romagna_Sentinel2_b8_post.tiff") # b8 post
+ERpost <- c(b2d, b3d, b4d, b8d) # vettore con tutte le bande post evento
 
 #crop images
 # cropping data e cioe taglio una zona precisa di interesse
 ext <- c(11.6, 12.6, 44.2, 45) # questa variabile mi da i limiti dell'immagine da tagliare (si definiscono guardando l'immagine)
-b2pcrop <- crop(b2p,ext)
-b3pcrop <- crop(b3p,ext)
-b4pcrop <- crop(b4p,ext)
-b8pcrop <- crop(b8p,ext)
-ERprecrop <- c(b2pcrop, b3pcrop, b4pcrop, b8pcrop)
+b2pcrop <- crop(b2p,ext) # taglio l'immagine b2 pre
+b3pcrop <- crop(b3p,ext) # taglio l'immagine b3 pre
+b4pcrop <- crop(b4p,ext) # taglio l'immagine b4 pre
+b8pcrop <- crop(b8p,ext) # taglio l'immagine b8 pre
+ERprecrop <- c(b2pcrop, b3pcrop, b4pcrop, b8pcrop) # vettore con tutte le bande pre tagliate
 
-b2dcrop <- crop(b2d,ext)
-b3dcrop <- crop(b3d,ext)
-b4dcrop <- crop(b4d,ext)
-b8dcrop <- crop(b8d,ext)
-ERpostcrop <- c(b2dcrop, b3dcrop, b4dcrop, b8dcrop)
+b2dcrop <- crop(b2d,ext) # taglio l'immagine b2 post
+b3dcrop <- crop(b3d,ext) # taglio l'immagine b3 post
+b4dcrop <- crop(b4d,ext) # taglio l'immagine b4 post
+b8dcrop <- crop(b8d,ext) # taglio l'immagine b8 post
+ERpostcrop <- c(b2dcrop, b3dcrop, b4dcrop, b8dcrop) # vettore con tutte le bande post tagliate
 
-
+# metto a confornto le quattro immagini (true color pre, true color post, false color pre e false color post) della romagna
 par(mfrow=c(2,2))
 im.plotRGB(ERprecrop, r=3, g=2, b=1)
 im.plotRGB(ERpostcrop, r=3, g=2, b=1)
@@ -52,43 +46,61 @@ im.plotRGB(ERpostcrop, r=4, g=2, b=1)
 
 
 tagl <- c(11.78, 11.91, 44.49, 44.61) #taglio la zona selezionata per osservare l'allagamento
-cropP <- crop(ERprecrop, tagl)
-cropD <- crop(ERpostcrop, tagl)
+cropP <- crop(ERprecrop, tagl) # zona tagliata pre
+cropD <- crop(ERpostcrop, tagl) # zona tagliata post
 
-par(mfrow=c(2,2))
+# mostro le quattro immagini (true color pre, true color post, false color pre e false color post) della zona di studio
+par(mfrow=c(1,1))
 im.plotRGB(cropP, r=3, g=2, b=1)
 im.plotRGB(cropD, r=3, g=2, b=1)
 im.plotRGB(cropP, r=4, g=2, b=1)
 im.plotRGB(cropD, r=4, g=2, b=1)
 
+# scelgo una "rampa di colori"
+cl <- colorRampPalette(c("darkblue", "yellow", "red", "black")) (100)
+
 #calcoliano NDVI
-NdviERpre = (cropP[[4]] - cropP[[3]]) / (cropP[[4]] + cropP[[3]])
+NdviERpre = (cropP[[4]] - cropP[[3]]) / (cropP[[4]] + cropP[[3]]) # calcolo NDVI pre dividendo la differenza tra banda infrarossa e la banda rossa per la somma della banda infrarossa con la banda rossa
 NdviERpre
 
-NdviERpost = (cropD[[4]] - cropD[[3]]) / (cropD[[4]] + cropD[[3]])
+NdviERpost = (cropD[[4]] - cropD[[3]]) / (cropD[[4]] + cropD[[3]]) # calcolo NDVI post dividendo la differenza tra banda infrarossa e la banda rossa per la somma della banda infrarossa con la banda rossa
 NdviERpost
 
-NdviERpostcrop <- crop(NdviERpost, ext)
-NdviERprecrop <- crop(NdviERpre, ext)
+NdviERpostcrop <- crop(NdviERpost, ext) # taglio la zona d'interesse
+NdviERprecrop <- crop(NdviERpre, ext) # taglio la zona d'interesse
 par(mfrow=c(1,2))
+# confronto le due immagini dopo aver calcolato NDVI
 plot(NdviERprecrop, col=cl)
 plot(NdviERpostcrop, col=cl)
 
 #calcoliamo NDWI
-NdwiERpre = (cropP[[2]] - cropP[[4]]) / (cropP[[2]] + cropP[[4]])
+NdwiERpre = (cropP[[2]] - cropP[[4]]) / (cropP[[2]] + cropP[[4]]) # calcolo NDWI pre dividendo la differenza tra banda verde e la banda infrarossa per la somma della bandaverde con la banda infrarossa
 NdwiERpre
 
-NdwiERpost = (cropD[[2]] - cropD[[4]]) / (cropD[[2]] + cropD[[4]])
+NdwiERpost = (cropD[[2]] - cropD[[4]]) / (cropD[[2]] + cropD[[4]]) # calcolo NDWI post dividendo la differenza tra banda verde e la banda infrarossa per la somma della bandaverde con la banda infrarossa
 NdwiERpost
 
-NdwiERpostcrop <- crop(NdwiERpost, ext)
-NdwiERprecrop <- crop(NdwiERpre, ext)
+NdwiERpostcrop <- crop(NdwiERpost, ext) # taglio la zona d'interesse
+NdwiERprecrop <- crop(NdwiERpre, ext) # taglio la zona d'interesse
 par(mfrow=c(1,2))
+# confronto le due immagini dopo aver calcalto NDWI
 plot(NdwiERprecrop, col=cl)
 plot(NdwiERpostcrop, col=cl)
 
+# qui sono mostrate le quattro immagini del post alluvione (true color, false color, NDVI, NDWI)
 par(mfrow=c(1,1))
 im.plotRGB(cropD, r=3, g=2, b=1)
 im.plotRGB(cropD, r=4, g=2, b=1)
 plot(NdviERpostcrop, col=cl)
 plot(NdwiERpostcrop, col=cl)
+
+# di seguito sono messe a confornto le immagini NDVI e NDWI del pre e post alluvione con la "rampa di colori" scelta precedentemente e una fatta appsota per essere più chiaramente visibile ai daltonici
+par(mfrow=c(1,2))
+plot(NdviERprecrop, col=cl)
+plot(NdviERprecrop, col=viridis(100))
+plot(NdviERpostcrop, col=cl)
+plot(NdviERpostcrop, col=viridis(100))
+plot(NdwiERprecrop, col=cl)
+plot(NdwiERprecrop, col=viridis(100))
+plot(NdwiERpostcrop, col=cl)
+plot(NdwiERpostcrop, col=viridis(100))
