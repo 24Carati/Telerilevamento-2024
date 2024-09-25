@@ -44,7 +44,7 @@ plot(sd3, col=viridisc)
 sd7 <- focal(nir, matrix(1/49, 7, 7), fun=sd)
 plot(sd7, col=viridisc)
 
-# stack: mettiamo le devizioni standard tutte insieme)
+# stack: mettiamo le devizioni standard tutte insieme
 stacksd <- c(sd3, sd7)
 plot(stacksd, col=viridisc)
 
