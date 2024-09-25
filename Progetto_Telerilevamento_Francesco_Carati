@@ -10,20 +10,20 @@ library(viridis) #questa libreria mi permette di usare i colori meglio visibili 
 
 
 #Ho preso le immagini satellitari alle bande b2, b3, b4, b8 del pre e del post alluvione da Sentinel-2
-b2p <- im.import("Emilia-Romagna_Sentinel2_b2_pre.tiff") # b2 pre
-b3p <- im.import("Emilia-Romagna_Sentinel2_b3_pre.tiff") # b3 pre
-b4p <- im.import("Emilia-Romagna_Sentinel2_b4_pre.tiff") # b4 pre
-b8p <- im.import("Emilia-Romagna_Sentinel2_b8_pre.tiff") # b8 pre
+b2p <- im.import("Emilia-Romagna_Sentinel2_b2_pre.tiff") # b2 pre, banda del blu
+b3p <- im.import("Emilia-Romagna_Sentinel2_b3_pre.tiff") # b3 pre, banda del verde
+b4p <- im.import("Emilia-Romagna_Sentinel2_b4_pre.tiff") # b4 pre, banda del rosso
+b8p <- im.import("Emilia-Romagna_Sentinel2_b8_pre.tiff") # b8 pre, banda dell'infrarosso
 ERpre <- c(b2p, b3p, b4p, b8p) # vettore con tutte le bande pre evento
 
-b2d <- im.import("Emilia-Romagna_Sentinel2_b2_post.tiff") # b2 post
-b3d <- im.import("Emilia-Romagna_Sentinel2_b3_post.tiff") # b3 post
-b4d <- im.import("Emilia-Romagna_Sentinel2_b4_post.tiff") # b4 post
-b8d <- im.import("Emilia-Romagna_Sentinel2_b8_post.tiff") # b8 post
+b2d <- im.import("Emilia-Romagna_Sentinel2_b2_post.tiff") # b2 post, banda del blu
+b3d <- im.import("Emilia-Romagna_Sentinel2_b3_post.tiff") # b3 post, banda del verde
+b4d <- im.import("Emilia-Romagna_Sentinel2_b4_post.tiff") # b4 post, banda del rosso
+b8d <- im.import("Emilia-Romagna_Sentinel2_b8_post.tiff") # b8 post, banda dell'infrarosso
 ERpost <- c(b2d, b3d, b4d, b8d) # vettore con tutte le bande post evento
 
 #crop images
-# cropping data e cioe taglio una zona precisa di interesse
+# cropping data: cioè taglio una zona precisa di interesse
 ext <- c(11.6, 12.6, 44.2, 45) # questa variabile mi da i limiti dell'immagine da tagliare (si definiscono guardando l'immagine)
 b2pcrop <- crop(b2p,ext) # taglio l'immagine b2 pre
 b3pcrop <- crop(b3p,ext) # taglio l'immagine b3 pre
@@ -39,10 +39,10 @@ ERpostcrop <- c(b2dcrop, b3dcrop, b4dcrop, b8dcrop) # vettore con tutte le bande
 
 # metto a confornto le quattro immagini (true color pre, true color post, false color pre e false color post) della romagna
 par(mfrow=c(2,2))
-im.plotRGB(ERprecrop, r=3, g=2, b=1)
-im.plotRGB(ERpostcrop, r=3, g=2, b=1)
-im.plotRGB(ERprecrop, r=4, g=2, b=1)
-im.plotRGB(ERpostcrop, r=4, g=2, b=1)
+im.plotRGB(ERprecrop, r=3, g=2, b=1) # true color pre
+im.plotRGB(ERpostcrop, r=3, g=2, b=1) # true color post
+im.plotRGB(ERprecrop, r=4, g=2, b=1) # false color pre
+im.plotRGB(ERpostcrop, r=4, g=2, b=1) # false color post
 
 
 tagl <- c(11.78, 11.91, 44.49, 44.61) #taglio la zona selezionata per osservare l'allagamento
@@ -51,8 +51,10 @@ cropD <- crop(ERpostcrop, tagl) # zona tagliata post
 
 # mostro le quattro immagini (true color pre, true color post, false color pre e false color post) della zona di studio
 par(mfrow=c(1,1))
+# true color
 im.plotRGB(cropP, r=3, g=2, b=1)
 im.plotRGB(cropD, r=3, g=2, b=1)
+# false color
 im.plotRGB(cropP, r=4, g=2, b=1)
 im.plotRGB(cropD, r=4, g=2, b=1)
 
