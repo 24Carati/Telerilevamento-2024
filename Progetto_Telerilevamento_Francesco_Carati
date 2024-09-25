@@ -1,8 +1,8 @@
-# dev.off() # con questo comando puliamo da tutti i lavori precedenti
+dev.off() # con questo comando puliamo da tutti i lavori precedenti
 
 library(terra)
 library(imageRy)
-library(viridis) #questa libreria mi permette di usare "rampe di colori" chiaramente riconoscibili anche ai daltonici
+library(viridis) #questa libreria mi permette di usare i colori meglio visibili dai daltonici
 
 
 #vedo la lista di tutte le immagini
@@ -56,7 +56,7 @@ im.plotRGB(cropD, r=3, g=2, b=1)
 im.plotRGB(cropP, r=4, g=2, b=1)
 im.plotRGB(cropD, r=4, g=2, b=1)
 
-# scelgo una "rampa di colori"
+# scelgo una palette di colori
 cl <- colorRampPalette(c("darkblue", "yellow", "red", "black")) (100)
 
 #calcoliano NDVI
@@ -94,7 +94,7 @@ im.plotRGB(cropD, r=4, g=2, b=1)
 plot(NdviERpostcrop, col=cl)
 plot(NdwiERpostcrop, col=cl)
 
-# di seguito sono messe a confornto le immagini NDVI e NDWI del pre e post alluvione con la "rampa di colori" scelta precedentemente e una fatta appsota per essere più chiaramente visibile ai daltonici
+# di seguito sono messe a confornto le immagini NDVI e NDWI del pre e post alluvione con la palette di colori scelta precedentemente e una fatta appsota per essere meglio visibile dai daltonici
 par(mfrow=c(1,2))
 plot(NdviERprecrop, col=cl)
 plot(NdviERprecrop, col=viridis(100))
